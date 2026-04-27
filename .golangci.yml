@@ -1,4 +1,4 @@
-version: 2
+version: "2"
 
 run:
   timeout: 3m
@@ -13,10 +13,5 @@ linters:
   disable:
     - depguard
 
-issues:
-  exclude-use-default: false
-  exclude-dirs:
-    - vendor
-
 severity:
-  default-severity: error
+  default: error
