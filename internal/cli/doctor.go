@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"github.com/steipete/camsnap/internal/exec"
+	mediaexec "github.com/steipete/camsnap/internal/exec"
 	"github.com/steipete/camsnap/internal/rtsp"
 )
 
@@ -31,7 +31,7 @@ func newDoctorCmd() *cobra.Command {
 				return err
 			}
 
-			if exec.HasBinary("ffmpeg") {
+			if mediaexec.HasBinary("ffmpeg") {
 				cmd.Println(sty.OK("✔ ffmpeg found in PATH"))
 			} else {
 				cmd.Println(sty.Err("✖ ffmpeg missing (install ffmpeg and retry)"))
@@ -102,7 +102,7 @@ func probeRTSP(_ *cobra.Command, url string, timeout time.Duration, authMode, tr
 	}
 
 	for attempt := 0; attempt < 3; attempt++ {
-		ctx, cancel := exec.WithTimeout(context.Background(), timeout)
+	ctx, cancel := mediaexec.WithTimeout(context.Background(), timeout)
 		args := []string{
 			"-hide_banner",
 			"-loglevel", "error",
@@ -114,13 +114,13 @@ func probeRTSP(_ *cobra.Command, url string, timeout time.Duration, authMode, tr
 			"-f", "null",
 			"-",
 		)
-		lastOut, lastErr = exec.RunFFmpegWithOutput(ctx, args...)
+		lastOut, lastErr = mediaexec.RunFFmpegWithOutput(ctx, args...)
 		cancel()
 		if lastErr == nil {
 			return nil
 		}
 		time.Sleep(500 * time.Millisecond)
 	}
-	class := exec.ClassifyError(lastOut)
+	class := mediaexec.ClassifyError(lastOut)
 	return fmt.Errorf("%s (%s)", lastErr, class)
 }

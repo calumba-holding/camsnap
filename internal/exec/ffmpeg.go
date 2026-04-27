@@ -1,5 +1,5 @@
-// Package exec wraps external command execution helpers.
-package exec
+// Package mediaexec wraps external command execution helpers.
+package mediaexec
 
 import (
 	"context"

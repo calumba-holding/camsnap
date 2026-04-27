@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"github.com/steipete/camsnap/internal/exec"
+	mediaexec "github.com/steipete/camsnap/internal/exec"
 	"github.com/steipete/camsnap/internal/rtsp"
 )
 
@@ -36,7 +36,7 @@ func newClipCmd() *cobra.Command {
 			if duration <= 0 {
 				return fmt.Errorf("--dur must be > 0")
 			}
-			if !exec.HasBinary("ffmpeg") {
+			if !mediaexec.HasBinary("ffmpeg") {
 				return fmt.Errorf("ffmpeg not found in PATH")
 			}
 			if outPath == "" {
@@ -102,7 +102,7 @@ func newClipCmd() *cobra.Command {
 				return err
 			}
 
-			ctx, cancel := exec.WithTimeout(context.Background(), timeout)
+			ctx, cancel := mediaexec.WithTimeout(context.Background(), timeout)
 			defer cancel()
 
 			if path != "" {
@@ -130,7 +130,7 @@ func newClipCmd() *cobra.Command {
 				}
 			}
 			ffArgs = append(ffArgs, outPath)
-			return exec.RunFFmpeg(ctx, ffArgs...)
+			return mediaexec.RunFFmpeg(ctx, ffArgs...)
 		},
 	}
 

@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	iexec "github.com/steipete/camsnap/internal/exec"
+	mediaexec "github.com/steipete/camsnap/internal/exec"
 	"github.com/steipete/camsnap/internal/rtsp"
 )
 
@@ -43,7 +43,7 @@ func newWatchCmd() *cobra.Command {
 			if threshold <= 0 || threshold >= 1 {
 				return fmt.Errorf("--threshold must be between 0 and 1 (e.g., 0.2)")
 			}
-			if !iexec.HasBinary("ffmpeg") {
+			if !mediaexec.HasBinary("ffmpeg") {
 				return fmt.Errorf("ffmpeg not found in PATH")
 			}
 			if _, ok := parseRTSPAuth(authMode); !ok {
@@ -179,7 +179,7 @@ func watchMotion(ctx context.Context, cameraName, url string, threshold float64,
 	}
 
 	if err := ff.Wait(); err != nil && ctx.Err() == nil {
-		class := iexec.ClassifyError(strings.Join(logBuf, "\n"))
+		class := mediaexec.ClassifyError(strings.Join(logBuf, "\n"))
 		return fmt.Errorf("ffmpeg exited: %w (%s)", err, class)
 	}
 	return nil

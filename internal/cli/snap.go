@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"github.com/steipete/camsnap/internal/exec"
+	mediaexec "github.com/steipete/camsnap/internal/exec"
 	"github.com/steipete/camsnap/internal/rtsp"
 	"github.com/steipete/camsnap/internal/rtspclient"
 )
@@ -44,7 +44,7 @@ func newSnapCmd() *cobra.Command {
 				outPath = tmp.Name()
 				cmd.Printf("No --out provided, writing snapshot to %s\n", outPath)
 			}
-			if !exec.HasBinary("ffmpeg") {
+			if !mediaexec.HasBinary("ffmpeg") {
 				return fmt.Errorf("ffmpeg not found in PATH")
 			}
 
@@ -97,7 +97,7 @@ func newSnapCmd() *cobra.Command {
 				return fmt.Errorf("invalid --rtsp-transport (use tcp|udp)")
 			}
 
-			ctx, cancel := exec.WithTimeout(context.Background(), timeout)
+			ctx, cancel := mediaexec.WithTimeout(context.Background(), timeout)
 			defer cancel()
 
 			if path != "" {
@@ -118,7 +118,7 @@ func newSnapCmd() *cobra.Command {
 				"-q:v", "2",
 				outPath,
 			}
-			return exec.RunFFmpeg(ctx, ffArgs...)
+			return mediaexec.RunFFmpeg(ctx, ffArgs...)
 		},
 	}
 
