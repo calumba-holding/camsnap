@@ -105,9 +105,7 @@ func newClipCmd() *cobra.Command {
 			ctx, cancel := mediaexec.WithTimeout(context.Background(), timeout)
 			defer cancel()
 
-			if path != "" {
-				url = appendPath(url, path)
-			} else {
+			if path == "" {
 				url = appendStream(url, stream)
 			}
 

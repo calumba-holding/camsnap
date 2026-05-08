@@ -1,6 +1,7 @@
 # Changelog
 
 ## 0.2.0
+- Fix custom RTSP paths like `/av_stream/ch0` being duplicated when used by snap/clip/watch.
 - Add explicit `path` support to store tokenized RTSP URLs (e.g., UniFi Protect) and wire it through add/snap/clip/watch.
 - Preserve legacy stream handling while allowing custom paths and per-camera defaults.
 - Document Protect setup and path usage; expanded README examples.

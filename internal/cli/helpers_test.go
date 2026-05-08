@@ -1,6 +1,11 @@
 package cli
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/steipete/camsnap/internal/config"
+	"github.com/steipete/camsnap/internal/rtsp"
+)
 
 func TestAppendStream(t *testing.T) {
 	base := "rtsp://user:pass@192.168.0.10:554/stream1"
@@ -78,5 +83,24 @@ func TestAppendPath(t *testing.T) {
 	got = appendPath(base, "")
 	if got != base {
 		t.Fatalf("appendPath empty: got %s want %s", got, base)
+	}
+}
+
+func TestCustomPathOverrideIsNotDuplicated(t *testing.T) {
+	cam := config.Camera{
+		Name:     "custom",
+		Host:     "192.168.1.10",
+		Port:     554,
+		Protocol: "rtsp",
+		Path:     "/av_stream/ch0",
+	}
+
+	got, err := rtsp.BuildURL(cam)
+	if err != nil {
+		t.Fatalf("BuildURL: %v", err)
+	}
+	want := "rtsp://192.168.1.10:554/av_stream/ch0"
+	if got != want {
+		t.Fatalf("custom path duplicated: got %s want %s", got, want)
 	}
 }

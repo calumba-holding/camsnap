@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/steipete/camsnap/internal/config"
@@ -91,6 +92,50 @@ func TestSnapCreatesTempFile(t *testing.T) {
 	path := extractTempPath(t, out)
 	if _, err := os.Stat(path); err != nil {
 		t.Fatalf("expected temp snap file to exist: %v", err)
+	}
+}
+
+func TestSnapCustomPathIsNotDuplicated(t *testing.T) {
+	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
+	cfgPath := filepath.Join(os.Getenv("XDG_CONFIG_HOME"), "camsnap", "config.yaml")
+	cfg := config.Config{
+		Cameras: []config.Camera{{
+			Name:     "cam",
+			Host:     "127.0.0.1",
+			Port:     554,
+			Protocol: "rtsp",
+			Path:     "/av_stream/ch0",
+		}},
+	}
+	if err := config.Save(cfgPath, cfg); err != nil {
+		t.Fatalf("save config: %v", err)
+	}
+
+	dir := t.TempDir()
+	argsPath := filepath.Join(dir, "ffmpeg.args")
+	script := filepath.Join(dir, "ffmpeg")
+	content := []byte("#!/bin/sh\nprintf '%s\\n' \"$@\" >\"" + argsPath + "\"\nout=\"\"\nfor last in \"$@\"; do out=\"$last\"; done\n: >\"$out\"\nexit 0\n")
+	if err := os.WriteFile(script, content, 0o755); err != nil {
+		t.Fatalf("write stub ffmpeg: %v", err)
+	}
+	t.Setenv("PATH", dir)
+
+	root := NewRootCommand("test")
+	root.SetArgs([]string{"--config", cfgPath, "snap", "cam", "--out", filepath.Join(t.TempDir(), "snap.jpg")})
+	if err := root.Execute(); err != nil {
+		t.Fatalf("snap: %v", err)
+	}
+
+	args, err := os.ReadFile(argsPath)
+	if err != nil {
+		t.Fatalf("read ffmpeg args: %v", err)
+	}
+	got := string(args)
+	if !strings.Contains(got, "rtsp://127.0.0.1:554/av_stream/ch0") {
+		t.Fatalf("missing custom path in ffmpeg args: %s", got)
+	}
+	if strings.Contains(got, "/av_stream/av_stream/ch0") {
+		t.Fatalf("custom path was duplicated in ffmpeg args: %s", got)
 	}
 }
 

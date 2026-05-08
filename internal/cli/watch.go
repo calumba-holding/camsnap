@@ -120,9 +120,7 @@ func watchMotion(ctx context.Context, cameraName, url string, threshold float64,
 		"-loglevel", "info",
 		"-rtsp_transport", transport,
 	}
-	if path != "" {
-		url = appendPath(url, path)
-	} else {
+	if path == "" {
 		url = appendStream(url, stream)
 	}
 	ffArgs = append(ffArgs,
