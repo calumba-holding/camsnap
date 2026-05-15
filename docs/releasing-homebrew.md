@@ -65,5 +65,5 @@ camsnap --version
 - Optionally post in team channel with upgrade command: `brew update && brew upgrade steipete/tap/camsnap`.
 
 ## Notes
-- We build from source in the formula; no binary assets required.
-- Keep the tap formula small: version, url, sha256, license, dependencies, `std_go_args`.
+- Release automation updates the tap from the GoReleaser macOS arm64 asset: `camsnap_X.Y.Z_darwin_arm64.tar.gz`.
+- Keep the tap formula small: version, url, sha256, license, dependencies.

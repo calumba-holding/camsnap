@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.2.2 - Unreleased
+
 ## 0.2.1
 - Add Docker support with multi-arch GHCR publishing.
 - Add GoReleaser-based release automation for GitHub releases, Homebrew tap updates, and linux/arm64 artifacts.

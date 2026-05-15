@@ -79,7 +79,7 @@ jobs:
             -f formula=camsnap \
             -f tag="$RELEASE_TAG" \
             -f repository=steipete/camsnap \
-            -f macos_artifact=camsnap-macos-arm64.tar.gz \
+            -f macos_artifact="camsnap_${RELEASE_TAG#v}_darwin_arm64.tar.gz" \
             -f request_id="$request_id"
 
           run_id=""
