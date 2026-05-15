@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1
+- Add Docker support with multi-arch GHCR publishing.
+- Add GoReleaser-based release automation for GitHub releases, Homebrew tap updates, and linux/arm64 artifacts.
+- Fix custom RTSP paths like `/av_stream/ch0` being duplicated when used by snap/clip/watch.
+- Update Go dependencies and move the source build baseline to Go 1.25.
+- Refresh release docs for Homebrew install verification, arm64 artifacts, and tap updates.
+
 ## 0.2.0
 - Fix custom RTSP paths like `/av_stream/ch0` being duplicated when used by snap/clip/watch.
 - Add explicit `path` support to store tokenized RTSP URLs (e.g., UniFi Protect) and wire it through add/snap/clip/watch.
